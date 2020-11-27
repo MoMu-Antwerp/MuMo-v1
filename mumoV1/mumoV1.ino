@@ -1,25 +1,25 @@
-// NODE_1_Mumo_fieldtest
-//###################################################################
-#define device_EUI "0023209FAA0B96F2"
-#define application_EUI "70B3D57ED002B319"
-#define app_key "E1BF81CCC0C97FBD1188F5EFAA15497D"
+//############   TTN SETTINGS   #######################################################
+#define device_EUI "0034CB1F3A1E17FE"
+#define application_EUI "70B3D57ED0037085"
+#define app_key "F10A9C97FF857E350092E410745AE7A9"
 
-#define device_address "26011A0B"
-#define network_session_key "4432B3AA248FFFBE25A1B43C147C8094"
-#define app_session_key "747657B65D8E26337769F223F2A09FCB"
+#define device_address "26011300"
+#define network_session_key "1ACC5ADE5AFFCD5FED6EF37543B4604D"
+#define app_session_key "6DC61FB498B1AAE158D63475F5298B64"
 
-//Sensor thresholds (FlashStorage overwrite with downlink -----------
+//############   SENSOR SETTINGS   ###################################################
+//Sensor thresholds (FlashStorage overwrite with downlink) -----------
+#define allow_downlink true
 #define base_maximal_temperature 35
 #define base_minimal_temperature 8
 #define base_maximal_humidity 70
 #define base_minimal_humidity 15
 #define base_maximal_illumination 420
 #define base_range_pressure 22000
-#define base_sleepCycli 10
+#define base_sleepCycli 5
 
-//Code information ---------------------------------------------------------
-int Version = 2;
-
+//############   CODE INFORMATION   ###################################################
+int Version = 1;
 
 /*- DO NOT EDIT THE CODE BELOW THIS LINE -*/
 #include "defines.h"
@@ -28,19 +28,18 @@ void setup(void) {
   Serial.begin(115200);
 
   // LoRaWan Board hardware settings
-  for (unsigned char i = 0; i < 26; i ++) {    // important, set all pins to HIGH to save power during sleeps
+  for (unsigned char i = 0; i < 26; i ++) { // Important, set all pins to HIGH to save power during sleeps
     pinMode(i, OUTPUT);
     digitalWrite(i, HIGH);
   }
-  digitalWrite(LED_BUILTIN, LOW); //but turn the led back off
-  pinMode(38, OUTPUT); //Specifically turn pin 38 HIGH to activate the Grove connectors
+  pinMode(38, OUTPUT); //Specifically turn pin 38 OUTPUT and HIGH to activate the Grove connectors
   digitalWrite(38, HIGH);
 
-  //-- Starting I2C sensors --//
+  //-- Starting both I2C sensors (bme and tsl) --//
   Wire.begin();
   if (!bme.begin(0x76) || !tsl.begin()) {
     Serial.println("Check wiring of the sensors!");
-    while (1);
+    while (1); //Eternal loop when disconnected
   }
 
   //-- Set up BME680 oversampling and filter initialization --//
@@ -75,7 +74,6 @@ void setup(void) {
   lora.setDeciveMode(LWOTAA);
 
   lora.setDataRate(DR0, EU868);
-
   lora.setAdaptiveDataRate(true);
 
   lora.setChannel(0, 868.1);
@@ -91,39 +89,43 @@ void setup(void) {
 
   lora.setPower(20);
 
-  while(!lora.setOTAAJoin(JOIN));
+  //Ping the TTN server to JOIN
+  while (!lora.setOTAAJoin(JOIN));
+  digitalWrite(LED_BUILTIN, LOW); //Turn the onboard led off now that we are joined
 
-  //-- Starting the internal RTC to help with long sleeps --//
-  rtc.begin(false); //false to use relative time to this moment
-  nextAlarmClock = rtc.getEpoch() + sleepcycle; // In this case, the ref. point for the alarm sequence
+  //RTC zetten
+  rtc.begin(false);
+  nextAlarmClock = rtc.getEpoch() + 60; // calculate the time of the first alarm (in one minute)
+  rtc.setAlarmEpoch(nextAlarmClock);
+  rtc.enableAlarm(rtc.MATCH_SS); //check the alarm based on seconds, so we wake up every minute
 
-  delay(1000);
+  delay(500);
   //perform first measurement on all sensors
   check_measurements();
   delay(500);
-
 }
 
 void loop(void) {
-  Serial.println("########################## NEW LOOP SEQUENCE #################################");
+  Serial.println("########################## LOOP SEQUENCE #################################");
 
-  if (loraSending()) { //return downlink data received
-    update_thresholds(); // change the threshold values in the flash
+  if (loraSending() && allow_downlink) { //return downlink data received
+    update_thresholds(); // change the threshold values in the flash if allowed
   }
 
   delay(20);
   Serial.println("Lora into sleep modus");
   lora.setDeviceLowPower();     // turn the LoRaWAN module into sleep mode
 
-  Serial.println("SleepMode!zzzzz ... sleep tight ...");
-
   for (int i = 0; i < sleepCycli.read() ; i++) { // 10 sleep cycli of 60 seconds
-    doSleep(); // deep sleep for 60 secs (+ 3 secs transmission time + 5 secs timeout = 60 secs period)
-    //delay(60000);  // 60 second "sleep"
-    if (check_measurements()) {
-      //an alarm was raised. Cut the sleepcycle and straight to send!
+
+    doSleep(); //sleep for one minute
+
+    if (check_measurements()) { //an alarm was raised. Cut the sleepcycle and straight to send!
+      alarm = true;
+      break;
+    } else if (alarm) { //no alarm this time, but in case the last time was; send once more
+      alarm = false;
       break;
     }
   }
-
 } // end of loop

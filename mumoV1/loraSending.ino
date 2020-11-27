@@ -1,5 +1,5 @@
 boolean loraSending() {
-  lora.setPower(20);
+  lora.setPower(20); //Send a command to wake up the lora module
   Serial.println("LoRa Awake!");
   delay(200);
 

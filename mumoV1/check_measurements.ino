@@ -59,17 +59,5 @@ boolean check_measurements() {
 
   combine_data(battery_status, humidity, temperature, pressure, lux); // combine all the measurments into a data package for sending
 
-  //Debug printout!
-  if (overshoot) {
-    Serial.println("!!!!!!!!!!!!!!! WARNING THRESHOLD alarm !!!!!!!!!!!!!!!!!!!!!!!!!");
-  } else {
-    if (maximal_temperature.read() == false && minimal_temperature.read() == false && maximal_humidity.read() == false && minimal_humidity.read() == false && maximal_illumination.read() == false && range_pressure.read() == false) {
-      Serial.println(" ");
-      Serial.println("There are no active threshold at this moment!");
-    } else {
-      Serial.println(" ");
-      Serial.println("Everthing looks good! Measurements are between the thresholds!");
-    }
-  }
   return overshoot;
 }

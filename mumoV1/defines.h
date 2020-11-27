@@ -24,9 +24,10 @@ FlashStorage(sleepCycli, int);
 // RTC --------------------------------------------------------------
 RTCZero rtc;
 long nextAlarmClock;
-#define sleepcycle 60 //wake up every 60 sec
 
 // Data var --------------------------------------------------------------
 unsigned char data[10];
 unsigned char downlinkData[10];
 char buffer[256];
+
+boolean alarm = false;
