@@ -82,3 +82,8 @@ Emails will be sent as soon as a sensor goes out of bound on one of these trigge
 
 ### Local alerts
 - On top of the alerts section it will show whether the settings are the global ones or have been overruled by local settings. They work exactly the same as the global ones. But this way you can make exceptions in whatever way you want to the global ones.
+
+## Resources
+- This site has been build using Bootstrap 4.5 as framework
+- Is styled using Bootswatch theme Flatly (https://bootswatch.com/flatly/)
+- Uses Dygraphs to build large dataset graphs (https://dygraphs.com/)
