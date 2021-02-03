@@ -14,21 +14,41 @@ Please also look at our other pages for details on the custom end-nodes and acti
 * Online accessible url (may be a subdomain as well)
 > Almost every webhost available online should support this.
 
-## Setup.php
+## Settings.php
 - First of all go to your webhosts settings and create a new MySQL database and user. 
+    - This process varies from webhost to webhost. So check your providers documentation for details. As a general guide search for database management and add a database user. 
+    - Use a different password then your webhost account please!
+    - In the example i create a database called mumo_dashboard.
+- Rename the Edit_me_settings.php file to settings.php. 
+    - (the file is named like this so updates can be placed without a chance of overwriting this file).
 - Update these settings in the settings.php file of this project `mysqli_connect("localhost","user","password","database");`
 - Also update the domain name of your website and the base url. (the domain is used in emails, the base url to create direct links).
-- If you want a different logo or project name, also these can be changed here.
+    - The url should always start with http:// or even better https:// if your site supports it. 
+    - The url should link to the home folder of the website. Not to a specific page or subfolder.
+    - It should not have a trailing / or file extension
+    >Examples: https://example.be or http://mumo.example.be or https://example.be/mumo
+- If you want a different logo or project name, these can also be changed here.
 - The bottom of the settings.php file contains a measurements list that contains all types of measurements that can be entered into the dashboard. This tells the dashboard how to call and handle all measurements. You can add all custom measurements to the back of this list. For visual purposes limiting it to 7 measurements per sensor is advised.
+- Options:
+    - Print_name: Name to be shown in the website
+    - Variable_name: How the data is named in the endpoint data from TTN and in the platform and database (no capitals or strange characters)
+    - Unit: Unit to be printed after the values
+    - Type: Datatype (determines how to present the data)[options: float (2 decimal places), big_float(4 decimal places), int(no decimal places)]
+    - Color: Color to use in the charts
+    - Calibration: Limiting range in the calibration settings
+    - Range: probible range the values will fall within (limits the alert ranges)
+    - From_zero: Show this variable in a chart with 0 in view or zoom in to the data variance
+
 
 ## Database setup
-- Then we need to setup our database. Therefore, go to the phpMyAdmin page of your domain. Enter the database you just created on the left. 
-![alt text](documentation/open_phpMyAdmin.png)
-- Go to import on top, upload the database.sql file and click Go. This will install all tables needed for the project. In case of errors popping up, please open a bug report here on GitHub.
-- The final thing to alter is to make sure we have an account to login to. Open the users database and edit the email address of the admin user. You can also change the users name and login if you prefer.   
+- Then we need to setup our database. Therefore, go to the phpMyAdmin page of your domain (often also to be found in your webhosts portal as phpMyAdmin or database access). Open the database you just created on the left (e.g.: mumo_dashboard). 
+![alt text](documentation/open_phpMyAdmin.jpg)
+- Go to import with the button on top, upload the database.sql file from the root of the project and click Go. This will install all tables needed for the project. In case of errors popping up, please open a bug report here on GitHub so we can help.
+- The final thing to alter is to make sure you have an account to login to on the dashboard. Open the users database and edit the email address of the admin user. You can also change the users name and login now if you prefer.   
 (the name is what is shown in the dashboard, the login is what you prefer to login with).
 ![alt text](documentation/user_email.png) 
-The password will be edited later, so leave this for now.
+The password will be edited later, so leave this for now. This is a hashed and encrypted representation. So if you edit here you will not be able to login with that password. If you did edit already, here is the hash to overwrite it again: 
+```$2y$10$rL5CX0JADSAH2ZyeFlpj1OWgm4q/m20Ta.fjTA9wj456q8NsXtof2```
 
 ## Deploy
 - Deploy all files of this project to your webhost. This is normally in the public_html folder.
@@ -46,6 +66,7 @@ The password will be edited later, so leave this for now.
 ### Global Settings
 - In the left top (next to Dashboard home now) will always be a settings button. Depending on the page you are on this might be global settings or settings for the opened device. Please open these settings now.
 - You see here sections of settings like 'user accounts', 'groups and devices' and 'global hardware alerts'.
+- Check the site endpoint url. If it shows any alerts you must check back in the settings.php file for the base $url. See the list of instructions in the settings.php section up above. 
 
 #### Users
 - In user accounts you can invite new users by adding their email address and screen name. They will receive an invite to choose their login name and password (please do tell them to check their spam folder).
@@ -82,8 +103,3 @@ Emails will be sent as soon as a sensor goes out of bound on one of these trigge
 
 ### Local alerts
 - On top of the alerts section it will show whether the settings are the global ones or have been overruled by local settings. They work exactly the same as the global ones. But this way you can make exceptions in whatever way you want to the global ones.
-
-## Resources
-- This site has been build using Bootstrap 4.5 as framework
-- Is styled using Bootswatch theme Flatly (https://bootswatch.com/flatly/)
-- Uses Dygraphs to build large dataset graphs (https://dygraphs.com/)

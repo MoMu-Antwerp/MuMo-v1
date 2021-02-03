@@ -1,4 +1,10 @@
-<?php include "settings.php"; ?>
+<?php if (file_exists("settings.php")) {
+	include "settings.php";
+}else{
+	echo "<div style='margin: 20%; background: #e74c3c; padding: 5%; font-size: 2em; color: whitesmoke; border-radius: 5px;'>
+	The settings.php file has not been properly prepared. Check the documentation again and make sure you renamed the settings to settings.php
+	</div>"; exit;
+} ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +19,7 @@
 	
 		
 
-	<title>Mumo Dash</title>
+	<title><?php echo $clustername; ?> Dash</title>
 	<!-- STYLESHEETS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/css/multi-select.min.css" integrity="sha512-3lMc9rpZbcRPiC3OeFM3Xey51i0p5ty5V8jkdlNGZLttjj6tleviLJfHli6p8EpXZkCklkqNt8ddSroB3bvhrQ==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
