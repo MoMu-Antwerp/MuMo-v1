@@ -97,6 +97,8 @@ if(isset($_SESSION["user"])){ ?>
 							case "notification_resolved": echo 'The notification has been marked as resolved!'; break;
 							case "user_deleted": echo 'This user has been deleted from the platform'; break;
 							case "changes_updated": echo 'Changes have been saved'; break;
+							case "user_created": echo 'The user has been added'; break;
+							case "user_created_url": echo 'The user has been added.<br/>You may send this user this url to register: <a href="'.base64_decode($_GET["url"]).'">'.base64_decode($_GET["url"]).'</a>'; break;
 						}
 						echo '</div>';
 					}

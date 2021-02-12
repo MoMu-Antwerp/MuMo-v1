@@ -57,8 +57,11 @@ if(isset($_GET["logout"])){
     ";
 
     universal_email($email, $subject, $message);
-    
-    header('Location: index.php?settings=general');
+    if(isset($show_link) && $_SESSION["user_privileges"] == 2){
+        header('Location: index.php?settings=general&succes=user_created_url&url='.base64_encode($combined_url));
+    }else{
+        header('Location: index.php?settings=general&succes=user_created');
+    }
     exit;
 
 }elseif(isset($_GET["reset_password"])){
