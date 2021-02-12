@@ -19,7 +19,7 @@ Please also look at our other pages for details on the custom end-nodes and acti
     - This process varies from webhost to webhost. So check your providers documentation for details. As a general guide search for database management and add a database user. 
     - Use a different password then your webhost account please!
     - In the example i create a database called mumo_dashboard.
-- Rename the Edit_me_settings.php file to settings.php. 
+- Rename the `Edit_me_settings.php` file to `settings.php`. 
     - (the file is named like this so updates can be placed without a chance of overwriting this file).
 - Update these settings in the settings.php file of this project `mysqli_connect("localhost","user","password","database");`
 - Also update the domain name of your website and the base url. (the domain is used in emails, the base url to create direct links).
@@ -37,7 +37,6 @@ Please also look at our other pages for details on the custom end-nodes and acti
     - Color: Color to use in the charts
     - Calibration: Limiting range in the calibration settings
     - Range: probible range the values will fall within (limits the alert ranges)
-    - From_zero: Show this variable in a chart with 0 in view or zoom in to the data variance
 
 
 ## Database setup
@@ -67,6 +66,23 @@ The password will be edited later, so leave this for now. This is a hashed and e
 - In the left top (next to Dashboard home now) will always be a settings button. Depending on the page you are on this might be global settings or settings for the opened device. Please open these settings now.
 - You see here sections of settings like 'user accounts', 'groups and devices' and 'global hardware alerts'.
 - Check the site endpoint url. If it shows any alerts you must check back in the settings.php file for the base $url. See the list of instructions in the settings.php section up above. 
+
+    ## Setting up the ***endpoint*** in TTN
+    - A small deviation from the explication of the functions of the settings is the Endpoint url that has to be registered with TTN (the things network) in order to receive data from your sensors.
+    - Go to [thethingnetwork.org](https://www.thethingsnetwork.org/) and login to your account.
+    - In your application that you would like to connect open the ***integrations*** tab.
+    - Click `add integration` and choose for an `HTTP integration`.
+    - Give your process a unique ID of you own liking and select the default acces key.
+    - Enter the endpoint url as found in the dashboard settings.
+    - Leave the rest of the settings as stock with method being Post and the rest of the options empty.
+    - Click `Add integration` and all should be fine. 
+
+    ![endpoint.png](documentation/endpoint.png)
+
+    - If you have an active endpoint: these will start showing up in the dashboard as soon as they transmit data. 
+    - If you don't receive any data from your sensors. Open the endpoint URL yourself in the browser. You should receive a message saying: `Mumo: endpoint is active.`. If not, check your server setup and url for any errors.
+
+    - This endpoint URL is also used in our custom active gateways python code. They transmit their readings directly to the dashboard without TTN.
 
 #### Users
 - In user accounts you can invite new users by adding their email address and screen name. They will receive an invite to choose their login name and password (please do tell them to check their spam folder).

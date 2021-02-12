@@ -2,14 +2,14 @@
 
 ### Decoder
 upload this code in to the decoder tab of the application:
-~~~
+```
 function Decoder(bytes, port) {
   // Decode an uplink message from a buffer
   // (array) of bytes to an object of fields.
   var decoded = {};
 
   decoded.version = bytes[0];
-  if(decoded.version == 2){
+  if(decoded.version == 1){
     decoded.battery = bytes[1];
     decoded.humidity = bytes[2];
     decoded.humidity += (bytes[3]/100);
@@ -23,12 +23,12 @@ function Decoder(bytes, port) {
   }
   return decoded;
 }
-~~~
+```
 
 # Human readable format
 ## Uplink
 #### BIT: ACTION
-- 0: version number (start V1, update to V2 for new pressure measurement baseline)
+- 0: version number (For now V1)
 - 1: Battery level (indication)[0-100%]
 - 2: Air moisture (above decimal place)[0 - 255%]
 - 3: Air moisture (after decimal place)[0.00-0.99% * 100]

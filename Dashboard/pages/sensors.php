@@ -61,12 +61,14 @@
 
                 function search_sensors($parent_id){
                     global $sensoren;
-                    foreach($sensoren as $i => $sensor){
-                        //echo $sensor["sensor_ID"];
-                        if(!isset($parent_id) || $sensor["group_ID"] == $parent_id){
-                            $id = $sensor["device_ID"];
-                            print_sensor($parent_id, array_merge($sensor, (array)get_sensor_data($id)), get_sensor_tresholds($id));
-                            unset($sensoren[$i]);
+                    if(isset($sensoren)){
+                        foreach($sensoren as $i => $sensor){
+                            //echo $sensor["sensor_ID"];
+                            if(!isset($parent_id) || $sensor["group_ID"] == $parent_id){
+                                $id = $sensor["device_ID"];
+                                print_sensor($parent_id, array_merge($sensor, (array)get_sensor_data($id)), get_sensor_tresholds($id));
+                                unset($sensoren[$i]);
+                            }
                         }
                     }
                 }

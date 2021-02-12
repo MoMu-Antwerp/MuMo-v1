@@ -5,6 +5,8 @@ MuMo stands for Museum Monitoring since the initial founder of the project is th
 
 The project consists of 3 main parts. A sensor node design, a gateway that also houses various sensors and a dashboard that visualizes all recorded measurements and can alert users of any out of bounds values. 
 
+<img src="documentation/0_1.jpg"  height="250" /> <img src="documentation/0_2.png"  height="250" />
+
 ### The sensor node 
 
 The sensor node is built around a Lorawan Seeed board that contains a ATSAMD21 processor (arduino zero compatible) and a RHF76 Lora module. 
@@ -17,19 +19,13 @@ All in a 3D printer optimized housing and programmable without special tools.
 
 The code features: 
 
-The Things Network connection 
-
-Measurement frequency from minutes to days 
-
-Intermittent measurements every minute to check for extreme conditions. 
-
-Immediate warning transmissions if any warnings are raised. 
-
-Down-linkable updates to all settings 
-
-Ability to connect other sensors by adding their library and implementation. 
-
-Decent power efficiency by using the internal RTC of the ATSAMD21 (down to 65 µA) 
+- The Things Network connection 
+- Measurement frequency from minutes to days 
+- Intermittent measurements every minute to check for extreme conditions. 
+- Immediate warning transmissions if any warnings are raised. 
+- Down-linkable updates to all settings 
+- Ability to connect other sensors by adding their library and implementation. 
+- Decent power efficiency by using the internal RTC of the ATSAMD21 (down to 65 µA) 
 
 ### The Gateway 
 
@@ -49,25 +45,19 @@ The dashboard makes the data received by the things network from all gateways an
 
 Requirements: 
 
-PHP version 5.6 or greater. 
-
-MYSQL version 5.6 or greater or MariaDB version 10.1 or greater. 
-
-Online accessible url (may be a subdomain as well) 
+- PHP version 5.6 or greater. 
+- MYSQL version 5.6 or greater or MariaDB version 10.1 or greater. 
+- Online accessible url (may be a subdomain as well) 
 
 ## Open source 
 
 All the development done in this project is open to be used, modified and shared if credits are given.  
 
 In this github you can find:  
-
-Shopping lists for all parts that we used. 
-
-.Stl files to print any of the housings. 
-
-Codes for the nodes, gateways and dashboard. 
-
-Manuals to take you through the assembly step by step. 
+- Shopping lists for all parts that we used. 
+- .Stl files to print any of the housings. 
+- Codes for the nodes, gateways and dashboard. 
+- Manuals to take you through the assembly step by step. 
 
 
 
@@ -75,14 +65,23 @@ Manuals to take you through the assembly step by step.
 - [Shopping list for the project.](/Shopping_list.md)
 ---
 ### Node
-- [Step by step assembly manual of the Node.](https://www.instructables.com/MuMo-Node/)
-- [STL files to 3D print the Node housing.](/STL_NODE)
-- [Latest Arduino code of the Node.](/mumoV1)
+- [Step by step assembly manual of the Node.](/Node/readme.md)
+- [STL files to 3D print the Node housing.](/Node/STL_NODE)
+- [Latest Arduino code of the Node.](/Node/mumoV1)
 ---
 ### Gateway / extensions
-- [Step by step assembly manual of the Gateway.](https://www.instructables.com/MuMo-LoRa-Gateway/)
-- [STL files to 3D print the Gateway housing / extensions.](/STL_GATEWAY)
+- [Step by step assembly manual of the Gateway.](/Gateway/readme.md)
+- [STL files to 3D print the Gateway housing / extensions.](/Gateway/STL_GATEWAY)
 ---
 ### Dashboard
-- [Step by step installation of the online dashboard.](/Dashboard)
+- [Step by step installation of the online dashboard.](/Dashboard/readme.md)
 - [All required files can be found in the same folder.](/Dashboard)
+
+
+# Contributions
+
+The MuMo project is a collaboration between [MoMu](https://www.momu.be/en/) and the [university of antwerp](https://www.uantwerpen.be/nl/studeren/aanbod/alle-opleidingen/productontwikkeling-studeren/) [Antwerp design factory](https://www.uantwerpen.be/nl/projecten/mondmaskers/over-ons/antwerp-design-factory/).
+
+Funded by the Flemish Government [innovatieve-partnerprojecten](https://www.vlaanderen.be/cjm/nl/cultuur/cultuur-en-economie/innovatieve-partnerprojecten) Project: Developing a IOT Datalogger for Museums using LoRaWan
+
+<img src="documentation/momu.png" width="30%" />  <img src="documentation/ADF.png"  width="60%" />
