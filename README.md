@@ -88,8 +88,7 @@ The MuMo project is a collaboration between [MoMu](https://www.momu.be/en/) and 
 
 Funded by the Flemish Government [Innovatief  partnerproject](https://www.vlaanderen.be/cjm/nl/cultuur/cultuur-en-economie/innovatieve-partnerprojecten) under the name: Developing a IOT Datalogger for Museums using LoRaWan
 
-<img src="documentation/momu.png" width="20%" />  <img src="documentation/ADF.png"  width="40%" /> <img src="documentation/flanders_logo.jpg" width="35%" />
-
+<img src="documentation/logo's.png" width="100%" />
 ---
 
 Shield: [![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
