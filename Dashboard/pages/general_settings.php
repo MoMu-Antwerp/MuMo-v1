@@ -14,7 +14,7 @@
                 </label>
                 <div class="col-sm-8">
                     <input id="sensor_name" name="website_name" class="form-control disabled" type="text" disabled
-                        value="Mumo" placeholder="Sensor Name"></input>
+                        value="<?php echo $clustername; ?>" placeholder="Sensor Name"></input>
                 </div>
             </div>
             <div class="form-group row">
