@@ -1,7 +1,9 @@
 <footer class="footer container mt-5 mb-3">
 	<div class="d-sm-flex justify-content-center justify-content-sm-between">
 		<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
-			Copyright © 2020 MuMoDash - 
+			Copyright © 2020 Based on 
+			<a href="https://github.com/MoMu-Antwerp/MuMo/blob/master/Dashboard/pages/general_settings.php">MuMoDash</a>
+			 - 
 			<a href="https://www.uantwerpen.be/nl/studeren/aanbod/alle-opleidingen/productontwikkeling-studeren/" target="_blank" rel="noreferrer noopener">University of Antwerp </a>
 			 & 
 			<a href="https://www.momu.be/en/" target="_blank" rel="noreferrer noopener">MoMu</a>
