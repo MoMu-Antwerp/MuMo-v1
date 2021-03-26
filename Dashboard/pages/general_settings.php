@@ -134,12 +134,14 @@
 
             function search_sensors($parent_id){
                 global $sensoren;
-                foreach($sensoren as $i => $sensor){
-                    //echo $sensor["device_ID"]."-".$sensor["group_ID"]."-".$parent_id."<br/>";
-                    if(!isset($parent_id) || $sensor["group_ID"] == $parent_id){
-                        $id = $sensor["device_ID"];
-                        print_sensor($parent_id, $sensor);
-                        unset($sensoren[$i]);
+                if(is_array($sensoren)){
+                    foreach($sensoren as $i => $sensor){
+                        //echo $sensor["device_ID"]."-".$sensor["group_ID"]."-".$parent_id."<br/>";
+                        if(!isset($parent_id) || $sensor["group_ID"] == $parent_id){
+                            $id = $sensor["device_ID"];
+                            print_sensor($parent_id, $sensor);
+                            unset($sensoren[$i]);
+                        }
                     }
                 }
             }
