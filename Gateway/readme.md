@@ -361,7 +361,7 @@ In the terminal type in > `sudo raspi-config`
 
 ### Instructions:
 
-1. Download the python script `mumo.py` from github: [Gateway python code](Gateway/Python/mumo.py)
+1. Download the python script `mumo.py` from github: [Gateway python code](Python/mumo.py)
 1. Place the code on your desktop.
 1. Open a terminal and type > `sudo nano /etc/xdg/lxsession/LXDE-pi/autostart`
 1. Copy this line on to the bottom off the file > `@lxterminal -e python3 /home/pi/Desktop/mumo.py`
