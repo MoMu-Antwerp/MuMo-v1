@@ -15,7 +15,42 @@ function isset_or_null($payload, $id){
 }
 
 //Receive downlink data from the things network or direct data from gateways. Difference is in the hardware_serial id.
-if(isset($data["hardware_serial"])){
+if(isset($data["end_device_ids"])){
+	//Data from TTN.V3
+    $eui = $data["end_device_ids"]["dev_eui"];
+	$payload = $data["uplink_message"]["decoded_payload"]; 
+    $version = isset_or_null($payload, "version");
+    $ID_offsets = device_ID($eui, $version, 0);
+	$ID = $ID_offsets[0];
+	$offsets = json_decode($ID_offsets[1], true);
+	$name = $ID_offsets[2];
+
+	$json = array(NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+	if(isset($payload["battery"])){         $json[0] = round($payload["battery"], 0) 		+ $offsets[0];     }
+	if(isset($payload["temperature"])){     $json[1] = round($payload["temperature"], 2) 	+ $offsets[1];     }
+	if(isset($payload["humidity"])){        $json[2] = round($payload["humidity"], 2) 		+ $offsets[2];     }
+	if(isset($payload["illumination"])){    $json[3] = round($payload["illumination"], 0) 	+ $offsets[3];     }
+	if(isset($payload["pressure"])){        $json[4] = round($payload["pressure"], 2) 		+ $offsets[4];     }
+	if(isset($payload["voc"])){             $json[5] = round($payload["voc"], 0) 			+ $offsets[5];     }
+	if(isset($payload["dust"])){            $json[6] = round($payload["dust"], 3) 			+ $offsets[6];     }
+	
+	$frame_counter = isset_or_null($data, "counter");
+	$json_encoded = json_encode($json);
+	if(isset($data["uplink_message"]["rx_metadata"])){
+		$connection_raw = $data["uplink_message"]["rx_metadata"];
+		$connection = max(array_column($connection_raw, "rssi"));
+	}else{
+		$connection = NULL;
+	}
+	$connections = mysqli_real_escape_string($con,$connection);
+
+    mysqli_query($con, "INSERT INTO data (device_ID, connections, frame_counter, json) VALUES ('".$ID."','".$connections."',".$frame_counter.", '".$json_encoded."')") or die ('Unable to execute query. '. mysqli_error($con));
+	echo "Data saved under id: " . mysqli_insert_id($con);
+	
+	include("alert_check.php"); // uses $ID and json data to parse for out of bound values
+
+}elseif(isset($data["hardware_serial"])){
     //Data from TTN
     $eui = $data["hardware_serial"];
 	$payload = $data["payload_fields"]; 
@@ -37,9 +72,13 @@ if(isset($data["hardware_serial"])){
 	
 	$frame_counter = isset_or_null($data, "counter");
 	$json_encoded = json_encode($json);
-	$connections = mysqli_real_escape_string($con,json_encode($data["metadata"]["gateways"]));
-	
-	// TODO: convert connections to something shorter
+
+	if(isset($data["metadata"]["gateways"])){
+		$connection = max(array_column($data["metadata"]["gateways"], "rssi"));
+	}else{
+		$connection = NULL;
+	}
+	$connections = mysqli_real_escape_string($con,$connection);
 
     mysqli_query($con, "INSERT INTO data (device_ID, connections, frame_counter, json) VALUES ('".$ID."','".$connections."',".$frame_counter.", '".$json_encoded."')") or die ('Unable to execute query. '. mysqli_error($con));
 	echo "Data saved under id: " . mysqli_insert_id($con);
@@ -219,5 +258,105 @@ function device_ID($eui, $version, $type){
 		]
 	},
 	"downlink_url":"https://integrations.thethingsnetwork.org/ttn-eu/api/v2/down/mumo_fieldtest/mumo_endpoint?key=ttn-account-v2.YdTwsd0rCTRrYybJGrhxjQgOYSjcgOxBydwYVKLKRf8"
+}
+
+
+TTN.V3 sample data:
+{
+    "end_device_ids":{
+       "device_id":"node-sam",
+       "application_ids":{
+          "application_id":"mumo-project-v1"
+       },
+       "dev_eui":"00CEA8CFFF53C337",
+       "join_eui":"70B3D57ED0037085",
+       "dev_addr":"260BCB15"
+    },
+    "correlation_ids":[
+       "as:up:01F3347DWMN5KF9XJ6BE2VFYJ6",
+       "ns:uplink:01F3347DKGDJYBM6MCAQ31CPEC",
+       "pba:conn:up:01F32RKDD6S99GF2S09KTRHCXV",
+       "pba:uplink:01F3347DJB1NFC7EJ0BWBNX0T6",
+       "rpc:/ttn.lorawan.v3.GsNs/HandleUplink:01F3347DKGNER2MAPT73HDGK2C",
+       "rpc:/ttn.lorawan.v3.NsAs/HandleUplink:01F3347DWGN458STJ96C9J4TJ9"
+    ],
+    "received_at":"2021-04-12T13:27:09.972931519Z",
+    "uplink_message":{
+       "session_key_id":"AXjGMUZc1Eo+47CMQ51ugg==",
+       "f_port":8,
+       "f_cnt":4,
+       "frm_payload":"AVsrXRYlelMAqA==",
+       "decoded_payload":{
+          "battery":91,
+          "humidity":43.93,
+          "illumination":168,
+          "pressure":1313.15,
+          "temperature":22.37,
+          "version":1
+       },
+       "rx_metadata":[
+          {
+             "gateway_ids":{
+                "gateway_id":"packetbroker"
+             },
+             "packet_broker":{
+                "message_id":"01F3347DJB1NFC7EJ0BWBNX0T6",
+                "forwarder_net_id":"000013",
+                "forwarder_tenant_id":"ttn",
+                "forwarder_cluster_id":"ttn-v2-eu-4",
+                "home_network_net_id":"000013",
+                "home_network_tenant_id":"ttn",
+                "home_network_cluster_id":"ttn-eu1",
+                "hops":[
+                   {
+                      "received_at":"2021-04-12T13:27:09.643269571Z",
+                      "sender_address":"52.169.150.138",
+                      "receiver_name":"router-dataplane-f8764784f-p5gbg",
+                      "receiver_agent":"pbdataplane/1.5.2 go/1.16.2 linux/amd64"
+                   },
+                   {
+                      "received_at":"2021-04-12T13:27:09.645685289Z",
+                      "sender_name":"router-dataplane-f8764784f-p5gbg",
+                      "sender_address":"forwarder_uplink",
+                      "receiver_name":"router-7665c7b677-c47hd",
+                      "receiver_agent":"pbrouter/1.5.2 go/1.16.2 linux/amd64"
+                   },
+                   {
+                      "received_at":"2021-04-12T13:27:09.647158108Z",
+                      "sender_name":"router-7665c7b677-c47hd",
+                      "sender_address":"deliver.000013_ttn_ttn-eu1.uplink",
+                      "receiver_name":"router-dataplane-f8764784f-n76ql",
+                      "receiver_agent":"pbdataplane/1.5.2 go/1.16.2 linux/amd64"
+                   }
+                ]
+             },
+             "time":"2021-04-12T13:27:09.578335Z",
+             "rssi":-59,
+             "channel_rssi":-59,
+             "snr":10,
+             "uplink_token":"eyJnIjoiWlhsS2FHSkhZMmxQYVVwQ1RWUkpORkl3VGs1VE1XTnBURU5LYkdKdFRXbFBhVXBDVFZSSk5GSXdUazVKYVhkcFlWaFphVTlwU201U1ZrcG9Za2RSTVZaRmRFNWtSMFpHWkVSa05VbHBkMmxrUjBadVNXcHZhVnBXVmxaWGFrcFNVMnhHU1ZwVmJ6UmFhbEUwVWtSa2FXRkZTVE5hZVVvNUxraGphamxHVEhneFpETm1VV2N3Y1ZFeU5uQTRabmN1Tmpab01GTkpUbGx2YkhNd1ZGcDBjUzVzWm5aUmVGQlJNMlV0YWxrek1HMXJaR3hhUmpWT1UyeGxiVjk1YkU1WlRHNUljVTl2YVhsTlUxUk1Xa1ZsZVhWbmJIRkhaekpSVFdwRGIxTk5PVlZ3T0ZRM1UwbERkbHA0TVV0dVgxVlBSVE5KVHpOdkxVWTVUWEY2YUZSbFFXZHFhek5HY1V3elVTMHhOa2xIZERVMFRsQnphMHR2UkRRdE0wUjFhVXh1ZVRkWlJGaHRkV0ozVUhCNWNGRm9kRWxCYjNSV1NFbGZkV05sVmpkSVdYSnJWRVZVUzAxeVRYSm1SRlF0TGs5bFIzVlNWa053WVd0RlRGbEZjVzlFY2pSaVpXYz0iLCJhIjp7ImZuaWQiOiIwMDAwMTMiLCJmdGlkIjoidHRuIiwiZmNpZCI6InR0bi12Mi1ldS00In19"
+          }
+       ],
+       "settings":{
+          "data_rate":{
+             "lora":{
+                "bandwidth":125000,
+                "spreading_factor":7
+             }
+          },
+          "data_rate_index":5,
+          "coding_rate":"4/5",
+          "frequency":"868300000"
+       },
+       "received_at":"2021-04-12T13:27:09.681001632Z",
+       "consumed_airtime":"0.061696s",
+       "locations":{
+          "user":{
+             "latitude":51.30663311314323,
+             "longitude":4.571793079376222,
+             "source":"SOURCE_REGISTRY"
+          }
+       }
+    }
 }
 */
