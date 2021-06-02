@@ -1,6 +1,6 @@
 //############   TTN SETTINGS   #######################################################
 #define device_EUI "0034CB1F3A1E17FE"
-#define application_EUI "70B3D57ED0037085"
+#define application_EUI "70B3D57ED0037085" //This might also be called JOIN_EUI in the new TTN.
 #define app_key "F10A9C97FF857E350092E410745AE7A9"
 
 #define device_address "26011300"
@@ -14,9 +14,9 @@
 #define base_minimal_temperature 8
 #define base_maximal_humidity 70
 #define base_minimal_humidity 15
-#define base_maximal_illumination 420
+#define base_maximal_illumination 1000
 #define base_range_pressure 22000
-#define base_sleepCycli 5
+#define base_sleepCycli 15
 
 //############   CODE INFORMATION   ###################################################
 int Version = 1;
