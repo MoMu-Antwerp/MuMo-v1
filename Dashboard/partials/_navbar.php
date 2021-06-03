@@ -5,7 +5,7 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">
-                        <img alt="Brand" src="<?php echo $logo; ?>" height="25px">
+                        <img alt="Brand" src="<?php echo $logo_w; ?>" height="25px">
                     </a>
                 </li>
             </ul>
