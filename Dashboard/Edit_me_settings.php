@@ -6,14 +6,16 @@ if($_SERVER['HTTP_HOST'] != "localhost"){
   $url = "https://example.com"; //base url ending on .be or .com
   $domain = "example.com"; //short url like it would be shown in an email adress behind the @
   $clustername = "Mumo"; 
-  $logo = "assets\images\logo\mumoLogoW.png"; //This can be changed to a different logo if desired
+  $logo = "assets\images\logo\Mumo final.png";
+  $logo_w = "assets\images\logo\Mumo final_w.png"; //This can be changed to a different logo if desired
 }else{
   //Settings of the localhost. Only needed whilst debuggin offline
   $con = mysqli_connect("localhost","root","root","mumo");
   $url = "http://localhost/MuMo-Dash"; //base url ending on .be or .com
   $domain = "localhost";
   $clustername = "Mumo";
-  $logo = "assets\images\logo\mumoLogoW.png";
+  $logo = "assets\images\logo\Mumo final.png";
+  $logo_w = "assets\images\logo\Mumo final_w.png";
 }
 
 // Check connection
