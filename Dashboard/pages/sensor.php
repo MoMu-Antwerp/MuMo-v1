@@ -25,6 +25,7 @@
     }
 	while($row = mysqli_fetch_assoc($result)){
 		$sensor = $row;
+      		$id = $row["device_ID"];
     }
     $offsets = json_decode($sensor["offsets"]);
 
