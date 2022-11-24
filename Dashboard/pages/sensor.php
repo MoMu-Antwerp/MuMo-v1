@@ -17,7 +17,7 @@
 
 <?php // get the data for this sensor
 	$id = $_GET["sensor"];
-	$query = "SELECT * FROM sensoren WHERE device_ID='$id' LIMIT 0,1";
+	$query = "SELECT * FROM sensoren WHERE device_ID='$id' OR device_EUI='$id' LIMIT 0,1";
     $result = mysqli_query($con, $query);
     if(!mysqli_num_rows($result)){
         echo "<h1 class='text-center'>Sensor not found</h1>";
